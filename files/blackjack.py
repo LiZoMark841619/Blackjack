@@ -1,4 +1,5 @@
 from base_klasses import Valid, Player, Dealer, FrenchDeck
+from typing import Any
 import random
 
 class Blackjack(Valid):
@@ -36,8 +37,8 @@ class Game:
         self.valid = Valid()
         self.game.welcome()
         self.dealer = self.game.get_dealer()
-        self.players_first_two_cards = {}
-        self.dealers_card = {}
+        self.players_first_two_cards: dict[str, list] = {}
+        self.dealers_card: dict[Any, Any] = {}
 
     def first_card(self) -> None:
         for player in self.game.get_players():
