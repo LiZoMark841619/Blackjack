@@ -2,14 +2,15 @@ from base_klasses import Valid, Player, Dealer, FrenchDeck
 from typing import Any
 import random
 
-class Blackjack(Valid):
+class Blackjack:
     def __init__(self) -> None:
         self._cards = FrenchDeck()
         self._dealers = Dealer()
-        chosen_dealer = self.get_valid_number(f'Choose your dealer from {self._dealers.get_options}! ', 0, list(self._dealers.get_options.keys())[-1])
+        self._valid = Valid()
+        chosen_dealer = self._valid.get_valid_number(f'Choose your dealer from {self._dealers.get_options}! ', 0, list(self._dealers.get_options.keys())[-1])
         self.__dealer = self._dealers.get_options[chosen_dealer]
-        self._num_players = self.get_valid_number('Enter the number of players from 1 to 4! ', 1, 4)
-        players = [Player() for _ in range(self._num_players)]
+        num_players = self._valid.get_valid_number('Enter the number of players from 1 to 4! ', 1, 4)
+        players = [Player() for _ in range(num_players)]
         self.__players = [player.get_player_name for player in players]
 
     def get_dealer(self) -> str:
