@@ -53,8 +53,7 @@ class Game:
             self.game.deal_card()
             self._extracted_hit_player(player)
         self.game.deal_card()
-        self.dealers_card[self.dealer][0] += self.game.get_dealt_card()
-        self.dealers_card[self.dealer][-1] += self.game.get_dealt_card_value()
+        self._extracted_hit_dealer()
     
     def _extracted_hit_player(self, player: str) -> None:
         self.players_first_two_cards[player][0] += self.game.get_dealt_card()
