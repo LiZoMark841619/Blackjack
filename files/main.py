@@ -1,4 +1,5 @@
 from blackjack import Game
+from base_klasses import Bet
 
 def _extracted_from_main_5(game) -> None:
     game.view_player_hand()

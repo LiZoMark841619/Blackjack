@@ -13,6 +13,14 @@ class Valid:
             if value in args: return value
             print('Invalid value, try again! ')
 
+class Bet:
+    def __init__(self) -> None:
+        valid = Valid()
+        self.__bet = valid.get_valid_number('Make your bet from 10 to 1000 dollars! ', 10, 1000)
+        
+    def make_your_bet(self) -> int:
+        return self.__bet
+
 class Dealer:
     def __init__(self) -> None:
         self.__options = dict(enumerate(['John', 'Kate', 'Robert', 'Elizabeth']))

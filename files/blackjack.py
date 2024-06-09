@@ -1,4 +1,4 @@
-from base_klasses import Valid, Player, Dealer, FrenchDeck
+from base_klasses import Valid, Bet, Player, Dealer, FrenchDeck
 from typing import Any
 import random
 
@@ -21,7 +21,7 @@ class Blackjack:
         
     def welcome(self) -> None:
         print(f'Welcome to game {self.__class__.__name__} {self.get_players()}! ')
-    
+
     def deal_card(self) -> None:
         self.__dealt = random.choice(self._cards._deck)
         self._cards._deck.remove(self.__dealt)
@@ -35,12 +35,13 @@ class Blackjack:
 class Game:
     def __init__(self) -> None:
         self.game = Blackjack()
-        self.valid = Valid()
-        self.welcome = self.game.welcome()
+        self.game.welcome()
         self.dealer = self.game.get_dealer()
         self.players_first_two_cards: dict[str, list] = {}
         self.dealers_card: dict[Any, Any] = {}
-
+        bets = [Bet() for _ in range(len(self.game.get_players()))]
+        self.bets = [bet.make_your_bet() for bet in bets]
+    
     def first_card(self) -> None:
         for player in self.game.get_players():
             self.game.deal_card()
@@ -67,7 +68,7 @@ class Game:
         
     def player_hit(self) -> None:
         for player in self.players_first_two_cards:
-            while self.valid.get_valid_string(f'\nDo you want to hit {player}? Enter yes, or no! ', 'yes', 'no') == 'yes':
+            while self.game._valid.get_valid_string(f'\nDo you want to hit {player}? Enter yes, or no! ', 'yes', 'no') == 'yes':
                 self.game.deal_card()
                 self._extracted_hit_player(player)
                 if self.players_first_two_cards[player][-1] > 21: print(f'{player}, you lost! '); break
