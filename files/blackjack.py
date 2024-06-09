@@ -9,8 +9,8 @@ class Blackjack(Valid):
         chosen_dealer = self.get_valid_number(f'Choose your dealer from {self._dealers.get_options}! ', 0, list(self._dealers.get_options.keys())[-1])
         self.__dealer = self._dealers.get_options[chosen_dealer]
         self._num_players = self.get_valid_number('Enter the number of players from 1 to 4! ', 1, 4)
-        self._players = [Player() for _ in range(self._num_players)]
-        self.__players = [player.get_player_name for player in self._players]
+        players = [Player() for _ in range(self._num_players)]
+        self.__players = [player.get_player_name for player in players]
 
     def get_dealer(self) -> str:
         return f'Dealer: {self.__dealer}'
@@ -35,7 +35,7 @@ class Game:
     def __init__(self) -> None:
         self.game = Blackjack()
         self.valid = Valid()
-        self.game.welcome()
+        self.welcome = self.game.welcome()
         self.dealer = self.game.get_dealer()
         self.players_first_two_cards: dict[str, list] = {}
         self.dealers_card: dict[Any, Any] = {}
@@ -73,18 +73,15 @@ class Game:
     def dealer_hit(self) -> None:
         while self.dealers_card[self.dealer][-1] < 16:
             self.game.deal_card()
-            if self.dealers_card[self.dealer][-1] > 21: break
+            if self.dealers_card[self.dealer][-1] > 21: return
             self.dealers_card[self.dealer][0] += self.game.get_dealt_card()
             self.dealers_card[self.dealer][-1] += self.game.get_dealt_card_value()
     
     def view_players_hand(self) -> None:
-        for card, value in self.players_first_two_cards.items():
-            print(card,'->',value)
+        for card, value in self.players_first_two_cards.items(): print(card,'->',value)
     
     def view_dealer_hand(self) -> None:
-        for card, value in self.dealers_card.items():
-            print(card,'->',value)
+        for card, value in self.dealers_card.items(): print(card,'->',value)
             
     def split(self): pass
-    
     def double(self): pass
