@@ -2,7 +2,7 @@ from blackjack import Game
 
 def _extracted_from_main_5(game, arg1: str = '') -> None:
     game.view_players_hand()
-    if arg1 is not None: print(arg1)
+    if arg1: print(arg1)
     game.view_dealer_hand()
 
 def main():
