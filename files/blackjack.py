@@ -2,13 +2,12 @@ from base_klasses import Valid, Bet, Player, Dealer, FrenchDeck
 from typing import Any
 import random
 
-class Blackjack:
+class Blackjack(Valid):
     def __init__(self) -> None:
         self._cards = FrenchDeck()
         self._dealers = Dealer()
-        self._valid = Valid()
-        chosen_dealer = self._valid.get_valid_number(f'Choose your dealer from {self._dealers.get_options}! ', 0, list(self._dealers.get_options.keys())[-1])
-        num_players = self._valid.get_valid_number('Enter the number of players from 1 to 4! ', 1, 4)
+        chosen_dealer = self.get_valid_number(f'Choose your dealer from {self._dealers.get_options}! ', 0, list(self._dealers.get_options.keys())[-1])
+        num_players = self.get_valid_number('Enter the number of players from 1 to 4! ', 1, 4)
         players = [Player() for _ in range(num_players)]
         self.__dealer = self._dealers.get_options[chosen_dealer]
         self.__players = [player.get_player_name for player in players]
@@ -23,14 +22,12 @@ class Blackjack:
         print(f'Welcome to game {self.__class__.__name__} {self.get_players()}! ')
 
     def deal_card(self) -> None:
-        self.__dealt = random.choice(self._cards._deck)
-        self._cards._deck.remove(self.__dealt)
-
-    def get_dealt_card(self) -> tuple:
-        return self.__dealt
+        card = random.choice(self._cards._deck)
+        self._cards._deck.remove(card)
+        return card
     
-    def get_dealt_card_value(self) -> int:
-        return self._cards._values[self.__dealt]
+    def get_dealt_card_value(self, card) -> int:
+        return self._cards._values[card]
 
 class Game:
     def __init__(self) -> None:
@@ -44,41 +41,41 @@ class Game:
     
     def first_card(self) -> None:
         for player in self.game.get_players():
-            self.game.deal_card()
-            self.players_first_two_cards[player] = [self.game.get_dealt_card(), self.game.get_dealt_card_value()]
-        self.game.deal_card()
-        self.dealers_card[self.dealer] = [self.game.get_dealt_card(), self.game.get_dealt_card_value()]
+            card = self.game.deal_card()
+            self.players_first_two_cards[player] = [card, self.game.get_dealt_card_value(card)]
+        card = self.game.deal_card()
+        self.dealers_card[self.dealer] = [card, self.game.get_dealt_card_value(card)]
 
     def second_card(self) -> None:
         for player in self.game.get_players():
-            self.game.deal_card()
-            self._extracted_hit_player(player)
-        self.game.deal_card()
-        self._extracted_hit_dealer()
+            card = self.game.deal_card()
+            self._extracted_hit_player(player, card)
+        card = self.game.deal_card()
+        self._extracted_hit_dealer(card)
     
-    def _extracted_hit_player(self, player: str) -> None:
-        self.players_first_two_cards[player][0] += self.game.get_dealt_card()
-        self.players_first_two_cards[player][-1] += self.game.get_dealt_card_value()
-        if self.players_first_two_cards[player][-1] < 10 and self.game.get_dealt_card()[0] == 'A': self.players_first_two_cards[player][-1] += 10
+    def _extracted_hit_player(self, player: str, card) -> None:
+        self.players_first_two_cards[player][0] += card
+        self.players_first_two_cards[player][-1] += self.game.get_dealt_card_value(card)
+        if self.players_first_two_cards[player][-1] < 10 and card == 'A': self.players_first_two_cards[player][-1] += 10
             
-    def _extracted_hit_dealer(self) -> None:
-        self.dealers_card[self.dealer][0] += self.game.get_dealt_card()
-        self.dealers_card[self.dealer][-1] += self.game.get_dealt_card_value()
-        if self.dealers_card[self.dealer][-1] < 10 and self.game.get_dealt_card()[0] == 'A': self.dealers_card[self.dealer][-1] += 10
+    def _extracted_hit_dealer(self, card) -> None:
+        self.dealers_card[self.dealer][0] += card
+        self.dealers_card[self.dealer][-1] += self.game.get_dealt_card_value(card)
+        if self.dealers_card[self.dealer][-1] < 10 and card == 'A': self.dealers_card[self.dealer][-1] += 10
         
     def player_hit(self) -> None:
         for player in self.players_first_two_cards:
-            while self.game._valid.get_valid_string(f'\nDo you want to hit {player}? Enter yes, or no! ', 'yes', 'no') == 'yes':
-                self.game.deal_card()
-                self._extracted_hit_player(player)
+            while self.game.get_valid_string(f'\nDo you want to hit {player}? Enter yes, or no! ', 'yes', 'no') == 'yes':
+                card = self.game.deal_card()
+                self._extracted_hit_player(player, card)
                 if self.players_first_two_cards[player][-1] > 21: print(f'{player}, you lost! '); break
                 print(self.players_first_two_cards); continue
             
     def dealer_hit(self) -> None:
         while self.dealers_card[self.dealer][-1] < 16:
-            self.game.deal_card()
+            card = self.game.deal_card()
             if self.dealers_card[self.dealer][-1] > 21: return
-            self._extracted_hit_dealer()
+            self._extracted_hit_dealer(card)
     
     def view_player_hand(self) -> None:
         for player, card_and_value in self.players_first_two_cards.items(): print(player,'->',card_and_value)
