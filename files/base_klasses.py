@@ -16,7 +16,7 @@ class Valid:
 class Bet:
     def __init__(self) -> None:
         valid = Valid()
-        self.__bet = valid.get_valid_number('Make your bet from 10 to 1000 dollars! ', 10, 1000)
+        self.__bet = valid.get_valid_number('Make your bet from 10 to 500 dollars! ', 10, 500)
         
     def make_your_bet(self) -> int:
         return self.__bet
