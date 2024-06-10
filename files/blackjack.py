@@ -51,24 +51,19 @@ class Game:
     def second_card(self) -> None:
         for player in self.game.get_players():
             card = self.game.deal_card()
-            self.update_player_card(player, card)
+            self.update_card(player, card, self.players_first_two_cards)
         card = self.game.deal_card()
-        self.update_dealer_card(card)
+        self.update_card(self.dealer, card, self.dealers_card)
     
-    def update_player_card(self, player: str, card: tuple) -> None:
-        self.players_first_two_cards[player][0] += card
-        self.players_first_two_cards[player][-1] += self.game.get_dealt_card_value(card)
-        if self.players_first_two_cards[player][-1] < 10 and card == 'A': self.players_first_two_cards[player][-1] += 10
-            
-    def update_dealer_card(self, card: tuple) -> None:
-        self.dealers_card[self.dealer][0] += card
-        self.dealers_card[self.dealer][-1] += self.game.get_dealt_card_value(card)
-        if self.dealers_card[self.dealer][-1] < 10 and card == 'A': self.dealers_card[self.dealer][-1] += 10
+    def update_card(self, player: str, card: tuple, dealt_cards: dict) -> None:
+        dealt_cards[player][0] += card
+        dealt_cards[player][-1] += self.game.get_dealt_card_value(card)
+        if dealt_cards[player][-1] < 10 and card[0] == 'A': dealt_cards[player][-1] += 10
         
     def player_hit(self, player) -> None:
         while self.game.get_valid_string(f'\nDo you want to hit {player}? Enter yes, or no! ', 'yes', 'no') == 'yes':
             card = self.game.deal_card()
-            self.update_player_card(player, card)
+            self.update_card(player, card, self.players_first_two_cards)
             if self.players_first_two_cards[player][-1] > 21:
                 print(f'{player}, you lost! ')
                 break
@@ -80,7 +75,7 @@ class Game:
             card = self.game.deal_card()
             if self.dealers_card[self.dealer][-1] > 21:
                 return
-            self.update_dealer_card(card)
+            self.update_card(self.dealer, card, self.dealers_card)
     
     def view_player_hand(self) -> None:
         for player, card_and_value in self.players_first_two_cards.items():
