@@ -1,7 +1,7 @@
 from blackjack import Game
 
 blackjack = Game()
-bets = blackjack.game.get_players_bets()
+bets = blackjack.game.get_bets()
 
 def view_hands(game) -> None:
     game.view_player_hand()
@@ -33,4 +33,4 @@ if __name__ == '__main__':
     view_hands(blackjack)
     second_round()
     view_hands(blackjack)
-    print(f'Here are your winnings:\n{blackjack.game.get_players_bets()}')
+    print(f'Here are your winnings:\n{blackjack.game.get_bets()}')

@@ -6,20 +6,26 @@ class Blackjack(Valid):
     def __init__(self) -> None:
         self._cards = FrenchDeck()
         self._dealers = Dealer()
+
+    def set_dealer(self) -> None:
         dealer = self.get_valid_number(f'Choose your dealer from {self._dealers.get_options}! ', 0, list(self._dealers.get_options.keys())[-1])
-        num_players = self.get_valid_number('Enter the number of players from 1 to 4! ', 1, 4)
         self.__dealer = self._dealers.get_options[dealer]
-        self.__players = [player.get_player_name for player in [Player() for _ in range(num_players)]]
-        self.__bets = [bet.make_your_bet() for bet in [Bet() for _ in range(num_players)]]
-        self.__players_bets = dict(zip(self.__players, self.__bets))
 
     def get_dealer(self) -> str:
         return f'Dealer: {self.__dealer}'
-            
+    
+    def set_players(self) -> None:
+        self.num_players = self.get_valid_number('Enter the number of players from 1 to 4! ', 1, 4)
+        self.__players = [player.get_player_name for player in [Player() for _ in range(self.num_players)]]
+        
     def get_players(self) -> list:
         return self.__players
     
-    def get_players_bets(self) -> dict:
+    def set_bets(self) -> None:
+        self.__bets = [bet.make_your_bet() for bet in [Bet() for _ in range(self.num_players)]]
+        self.__players_bets = dict(zip(self.__players, self.__bets))
+    
+    def get_bets(self) -> dict:
         return self.__players_bets
     
     def welcome(self) -> None:
@@ -37,6 +43,9 @@ class Blackjack(Valid):
 class Game:
     def __init__(self) -> None:
         self.game = Blackjack()
+        self.game.set_dealer()
+        self.game.set_players()
+        self.game.set_bets()
         self.game.welcome()
         self.dealer = self.game.get_dealer()
         self.players_first_two_cards: dict[str, list] = {}
@@ -92,7 +101,7 @@ class Game:
         pass
     
     def get_insurance(self, player: str, insurance: int) -> None:
-        self.game.get_players_bets()[player] += insurance
+        self.game.get_bets()[player] += insurance
 
     def surrendering(self, player: str) -> None:
-        self.game.get_players_bets()[player] *= 0.5
+        self.game.get_bets()[player] *= 0.5
