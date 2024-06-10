@@ -23,6 +23,7 @@ class Blackjack(Valid):
         return self.__players_bets
     
     def welcome(self) -> None:
+        print()
         print(f'Welcome to game {self.__class__.__name__} {self.get_players()}! ')
 
     def deal_card(self) -> tuple:
