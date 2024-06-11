@@ -24,7 +24,14 @@ class Process:
         self.blackjack.second_card()
         self.view_hands()
         for player in self.blackjack.game.get_players():
-            if self.blackjack.game.get_valid_string(f'Would you like to surrender your cards {player}? Enter yes or no! ', 'yes', 'no') == 'yes':
+            if self.blackjack.game.get_valid_string(f'Would you like to surrender your cards {player}? Enter yes, or no! ', 'yes', 'no') == 'yes':
                 self.blackjack.surrendering(player)
             else: self.blackjack.player_hit(player)
         self.blackjack.dealer_hit()
+        
+    def result(self):
+        for player, card_value in self.blackjack.players_first_two_cards.items():
+            if card_value[-1] > 21:
+                self.blackjack.game.get_bets()[player] = 0
+            elif self.blackjack.dealers_card[self.blackjack.dealer][-1] <= 21 and self.blackjack.players_first_two_cards[player][-1] < self.blackjack.dealers_card[self.blackjack.dealer][-1]:
+                self.blackjack.game.get_bets()[player] = 0

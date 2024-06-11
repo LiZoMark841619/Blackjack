@@ -16,7 +16,7 @@ class Valid:
 class Bet:
     def __init__(self) -> None:
         valid = Valid()
-        self.__bet = valid.get_valid_number('Make your bet from 10 to 500 dollars! ', 10, 500)
+        self.__bet = valid.get_valid_number('Make your bets from 5 to 100 dollars! ', 5, 100)
         
     def make_your_bet(self) -> int:
         return self.__bet
@@ -24,16 +24,25 @@ class Bet:
 class Dealer:
     def __init__(self) -> None:
         self.__options = dict(enumerate(['John', 'Kate', 'Robert', 'Elizabeth']))
+        
     @property
     def get_options(self) -> dict:
         return self.__options
     
 class Player:
+    number_of_instances = 0
+    
     def __init__(self) -> None:
-        self.__name = input('Enter your name! ').title()
+        self.count()
+        self.__name = input(f'Enter the #{Player.number_of_instances} Player name! ')
+    
+    @classmethod
+    def count(cls):
+        cls.number_of_instances += 1
+        
     @property
     def get_player_name(self) -> str:
-        return self.__name
+        return self.__name.title()
     
 class FrenchDeck:
     def __init__(self) -> None:
