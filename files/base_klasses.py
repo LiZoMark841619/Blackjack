@@ -3,14 +3,17 @@ class Valid:
         while True:
             try:
                 value = int(input(prompt))
-                if min_val <= value <= max_val: return value
+                if min_val <= value <= max_val:
+                    return value
                 print('Invalid number! Please try again! ')
-            except ValueError: print('Invalid value! Please enter a valid number! ')
+            except ValueError:
+                print('Invalid value! Please enter a valid number! ')
     
     def get_valid_string(self, prompt: str, *args) -> str:
         while True:
             value = input(prompt)
-            if value in args: return value
+            if value in args:
+                return value
             print('Invalid value, try again! ')
 
 class Bet:
@@ -23,7 +26,7 @@ class Bet:
 
 class Dealer:
     def __init__(self) -> None:
-        self.__options = dict(enumerate(['John', 'Kate', 'Robert', 'Elizabeth']))
+        self.__options = {0:'John', 1:'Kate', 2:'Robert', 3:'Elizabeth'}
         
     @property
     def get_options(self) -> dict:
@@ -33,12 +36,8 @@ class Player:
     number_of_instances = 0
     
     def __init__(self) -> None:
-        self.count()
+        Player.number_of_instances += 1
         self.__name = input(f'Enter the #{Player.number_of_instances} Player name! ')
-    
-    @classmethod
-    def count(cls):
-        cls.number_of_instances += 1
         
     @property
     def get_player_name(self) -> str:
@@ -48,4 +47,4 @@ class FrenchDeck:
     def __init__(self) -> None:
         self._cards = list(range(2, 11)) + list('JQKA')
         self._deck = [(card, color) for card in self._cards for color in 'SHDC']
-        self._values = {card:card[0] if type(card[0]) == int else 1 if card[0] == 'A' else 10 for card in self._deck}
+        self._values = {card:card[0] if isinstance(card[0], int) else 1 if card[0] == 'A' else 10 for card in self._deck}
