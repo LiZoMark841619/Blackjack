@@ -10,5 +10,3 @@ if __name__ == '__main__':
     process.second_round()
     process.view_hands()
     print(f'Here are your winnings:\n{process.blackjack.game.get_bets()}')
-
-    

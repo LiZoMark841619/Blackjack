@@ -29,8 +29,7 @@ class Blackjack(Valid):
         return self.__players_bets
     
     def welcome(self) -> None:
-        print()
-        print(f'Welcome to game {self.__class__.__name__} {self.get_players()}! ')
+        print(f'\nWelcome to game {self.__class__.__name__} {self.get_players()}! ')
 
     def deal_card(self) -> tuple:
         card = random.choice(self._cards._deck)
@@ -54,9 +53,11 @@ class Game:
     def first_card(self) -> None:
         for player in self.game.get_players():
             card = self.game.deal_card()
-            self.players_first_two_cards[player] = [card, self.game.get_dealt_card_value(card)]
+            card_value = self.game.get_dealt_card_value(card)
+            self.players_first_two_cards[player] = [card, card_value]
         card = self.game.deal_card()
-        self.dealers_card[self.dealer] = [card, self.game.get_dealt_card_value(card)]
+        card_value = self.game.get_dealt_card_value(card)
+        self.dealers_card[self.dealer] = [card, card_value]
 
     def second_card(self) -> None:
         for player in self.game.get_players():
