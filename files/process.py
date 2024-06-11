@@ -13,7 +13,7 @@ class Process:
         print(f'You can see your bets as follows:\n{self.bets}')
         print('\nFirst card of the players and the dealer!\n')
         
-    def first_round(self):
+    def first_round(self) -> None:
         self.blackjack.first_card()
         for player in self.blackjack.game.get_players():
             if self.blackjack.dealers_card[self.blackjack.dealer][0][0] == 'A' and self.blackjack.game.get_valid_string('Would you like to get insurance? Enter yes or no! ', 'yes', 'no') == 'yes':
