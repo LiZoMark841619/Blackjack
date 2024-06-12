@@ -16,13 +16,13 @@ class Blackjack(Valid):
     
     def set_players(self) -> None:
         self.num_players = self.get_valid_number('Enter the number of players from 1 to 4! ', 1, 4)
-        self.__players = [player.get_player_name for player in [Player() for _ in range(self.num_players)]]
+        self.__players = [player.get_name for player in [Player() for _ in range(self.num_players)]]
         
     def get_players(self) -> list:
         return self.__players
     
     def set_bets(self) -> None:
-        self.__bets = [bet.make_your_bet() for bet in [Bet() for _ in range(self.num_players)]]
+        self.__bets = [bet.make_bet() for bet in [Bet() for _ in range(self.num_players)]]
         self.__players_bets = dict(zip(self.__players, self.__bets))
     
     def get_bets(self) -> dict:
@@ -38,7 +38,6 @@ class Blackjack(Valid):
     
     def get_dealt_card_value(self, card) -> int:
         return self._cards._values[card]
-
 class Game:
     def __init__(self) -> None:
         self.game = Blackjack()
@@ -47,41 +46,34 @@ class Game:
         self.game.set_bets()
         self.game.welcome()
         self.dealer = self.game.get_dealer()
-        self.players_first_two_cards: dict[str, list] = {}
+        self.players_cards: dict[str, list] = {}
         self.dealers_card: dict[Any, Any] = {}
     
-    def first_card(self) -> None:
-        for player in self.game.get_players():
-            card = self.game.deal_card()
-            card_value = self.game.get_dealt_card_value(card)
-            self.players_first_two_cards[player] = [card, card_value]
+    def deal_first_card(self, player_or_dealer: str, dealt_cards: dict) -> None:
         card = self.game.deal_card()
         card_value = self.game.get_dealt_card_value(card)
-        self.dealers_card[self.dealer] = [card, card_value]
+        dealt_cards[player_or_dealer] = [card, card_value]
 
-    def second_card(self) -> None:
-        for player in self.game.get_players():
-            card = self.game.deal_card()
-            self.update_card(player, card, self.players_first_two_cards)
+    def deal_second_card(self, player_or_dealer: str, dealt_cards: dict) -> None:
         card = self.game.deal_card()
-        self.update_card(self.dealer, card, self.dealers_card)
+        self.update_card(player_or_dealer, card, dealt_cards)
     
     def update_card(self, player: str, card: tuple, dealt_cards: dict) -> None:
         dealt_cards[player][0] += card
         dealt_cards[player][-1] += self.game.get_dealt_card_value(card)
         if dealt_cards[player][-1] < 10 and card[0] == 'A': dealt_cards[player][-1] += 10
         
-    def player_hit(self, player) -> None:
+    def hit_player(self, player) -> None:
         while self.game.get_valid_string(f'\nDo you want to hit {player}? Enter yes, or no! ', 'yes', 'no') == 'yes':
             card = self.game.deal_card()
-            self.update_card(player, card, self.players_first_two_cards)
-            if self.players_first_two_cards[player][-1] > 21:
+            self.update_card(player, card, self.players_cards)
+            if self.players_cards[player][-1] > 21:
                 print(f'{player}, you lost! ')
                 break
-            print(self.players_first_two_cards)
+            print(self.players_cards)
             continue
             
-    def dealer_hit(self) -> None:
+    def hit_dealer(self) -> None:
         while self.dealers_card[self.dealer][-1] < 16:
             card = self.game.deal_card()
             if self.dealers_card[self.dealer][-1] > 21:
@@ -89,7 +81,7 @@ class Game:
             self.update_card(self.dealer, card, self.dealers_card)
     
     def view_player_hand(self) -> None:
-        for player, card_and_value in self.players_first_two_cards.items():
+        for player, card_and_value in self.players_cards.items():
             print(player,'->',card_and_value)
     
     def view_dealer_hand(self) -> None:
@@ -104,5 +96,5 @@ class Game:
     def get_insurance(self, player: str, insurance: int) -> None:
         self.game.get_bets()[player] += insurance
 
-    def surrendering(self, player: str) -> None:
+    def surrender_cards(self, player: str) -> None:
         self.game.get_bets()[player] *= 0.5

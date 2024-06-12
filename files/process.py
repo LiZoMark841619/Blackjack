@@ -10,33 +10,42 @@ class Process:
         self.blackjack.view_dealer_hand()
 
     def display_bets(self) -> None:
-        print(f'You can see your bets as follows:\n{self.bets}')
+        print(f'\nYou can see your bets as follows:\n{self.bets}')
         
-    def first_round(self) -> None:
-        self.blackjack.first_card()
+    def get_one_round(self, func_) -> tuple[dict, dict]:
+        player_names = self.blackjack.game.get_players()
+        for player in player_names:
+            dealt_cards = self.blackjack.players_cards
+            func_(player, dealt_cards)
+        dealt_cards = self.blackjack.dealers_card
+        func_(self.blackjack.dealer, dealt_cards)
+        return self.blackjack.players_cards, self.blackjack.dealers_card
+
+    def surrender(self) -> None:
+        player_names = self.blackjack.game.get_players()
+        for player in player_names:
+            surrender = self.blackjack.game.get_valid_string(f'\nWould you like to surrender your cards {player}? Enter yes, or no! ', 'yes', 'no')
+            if surrender == 'yes':
+                self.blackjack.surrender_cards(player)
+            else: 
+                self.blackjack.hit_player(player)
+        self.blackjack.hit_dealer()
+
+    def insurance_against_blackjack(self) -> bool:
         player_names = self.blackjack.game.get_players()
         for player in player_names:
             if self.blackjack.dealers_card[self.blackjack.dealer][0][0] == 'A':
-                insurance = self.blackjack.game.get_valid_string('Would you like to get insurance? Enter yes or no! ', 'yes', 'no')
+                insurance = self.blackjack.game.get_valid_string(f'Would you like to get insurance {player}? Enter yes or no! ', 'yes', 'no')
                 if insurance == 'yes': 
                     self.blackjack.get_insurance(player, self.bets//2)
-
-    def second_round(self) -> None:
-        self.blackjack.second_card()
-        self.view_hands()
-        player_names = self.blackjack.game.get_players()
-        for player in player_names:
-            surrender = self.blackjack.game.get_valid_string(f'Would you like to surrender your cards {player}? Enter yes, or no! ', 'yes', 'no')
-            if surrender == 'yes':
-                self.blackjack.surrendering(player)
-            else: 
-                self.blackjack.player_hit(player)
-        self.blackjack.dealer_hit()
-        
-    def result(self):
-        for player, card_value in self.blackjack.players_first_two_cards.items():
-            if card_value[-1] > 21:
-                self.blackjack.game.get_bets()[player] = 0
-            elif self.blackjack.dealers_card[self.blackjack.dealer][-1] <= 21 and \
-                self.blackjack.players_first_two_cards[player][-1] <= self.blackjack.dealers_card[self.blackjack.dealer][-1]:
-                    self.blackjack.game.get_bets()[player] = 0
+                    return True
+                    
+    def check_winnings(self) -> dict:
+        self.winnings = dict()
+        for player, card_value in self.blackjack.players_cards.items():
+            self.winnings[player] = 0
+            if card_value[-1] > 21 or (self.blackjack.dealers_card[self.blackjack.dealer][-1] <= 21 and \
+                self.blackjack.players_cards[player][-1] <= self.blackjack.dealers_card[self.blackjack.dealer][-1]) and \
+                    not self.insurance_against_blackjack():
+                    self.winnings[player] -= self.blackjack.game.get_bets()[player]
+        return self.winnings

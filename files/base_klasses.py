@@ -21,7 +21,7 @@ class Bet:
         valid = Valid()
         self.__bet = valid.get_valid_number('Make your bets from 5 to 100 dollars! ', 5, 100)
         
-    def make_your_bet(self) -> int:
+    def make_bet(self) -> int:
         return self.__bet
 
 class Dealer:
@@ -40,7 +40,7 @@ class Player:
         self.__name = input(f'Enter the #{Player.number_of_instances} Player name! ')
         
     @property
-    def get_player_name(self) -> str:
+    def get_name(self) -> str:
         return self.__name.title()
     
 class FrenchDeck:
