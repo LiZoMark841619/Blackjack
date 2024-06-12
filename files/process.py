@@ -12,8 +12,7 @@ class Process:
     def display_bets(self) -> None:
         print(f'\nYou can see your bets as follows:\n{self.bets}')
         
-    def get_one_round(self, func_) -> tuple[dict, dict]:
-        player_names = self.blackjack.game.get_players()
+    def get_one_round(self, func_, player_names: list) -> tuple[dict, dict]:
         for player in player_names:
             dealt_cards = self.blackjack.players_cards
             func_(player, dealt_cards)
@@ -21,8 +20,7 @@ class Process:
         func_(self.blackjack.dealer, dealt_cards)
         return self.blackjack.players_cards, self.blackjack.dealers_card
 
-    def surrender(self) -> None:
-        player_names = self.blackjack.game.get_players()
+    def surrender(self, player_names: list) -> None:
         for player in player_names:
             surrender = self.blackjack.game.get_valid_string(f'\nWould you like to surrender your cards {player}? Enter yes, or no! ', 'yes', 'no')
             if surrender == 'yes':
@@ -31,17 +29,15 @@ class Process:
                 self.blackjack.hit_player(player)
         self.blackjack.hit_dealer()
 
-    def insurance_against_blackjack(self) -> bool:
-        player_names = self.blackjack.game.get_players()
+    def insurance_against_blackjack(self, player_names: list) -> None:
         for player in player_names:
             if self.blackjack.dealers_card[self.blackjack.dealer][0][0] == 'A':
                 insurance = self.blackjack.game.get_valid_string(f'Would you like to get insurance {player}? Enter yes or no! ', 'yes', 'no')
                 if insurance == 'yes': 
-                    self.blackjack.get_insurance(player, self.bets//2)
-                    return True
+                    self.blackjack.get_insurance(player, self.bets[player]//2)
                     
     def check_winnings(self) -> dict:
-        self.winnings = dict()
+        self.winnings = {}
         for player, card_value in self.blackjack.players_cards.items():
             self.winnings[player] = 0
             if card_value[-1] > 21 or (self.blackjack.dealers_card[self.blackjack.dealer][-1] <= 21 and \
