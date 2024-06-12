@@ -31,7 +31,7 @@ class Process:
 
     def insurance_against_blackjack(self, player_names: list) -> None:
         for player in player_names:
-            if self.blackjack.dealers_card[self.blackjack.dealer][0][0] == 'A':
+            if 'A' in self.blackjack.dealers_card[self.blackjack.dealer][0]:
                 insurance = self.blackjack.game.get_valid_string(f'Would you like to get insurance {player}? Enter yes or no! ', 'yes', 'no')
                 if insurance == 'yes': 
                     self.blackjack.get_insurance(player, self.bets[player]//2)
