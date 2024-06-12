@@ -45,7 +45,8 @@ class Process:
         for player, card_value in self.blackjack.players_cards.items():
             self.winnings[player] = 0
             if card_value[-1] > 21 or (self.blackjack.dealers_card[self.blackjack.dealer][-1] <= 21 and \
-                self.blackjack.players_cards[player][-1] <= self.blackjack.dealers_card[self.blackjack.dealer][-1]) and \
-                    not self.insurance_against_blackjack():
-                    self.winnings[player] -= self.blackjack.game.get_bets()[player]
+                self.blackjack.players_cards[player][-1] <= self.blackjack.dealers_card[self.blackjack.dealer][-1]):
+                    self.winnings[player] = -self.blackjack.game.get_bets()[player]
+            else:
+                self.winnings[player] += self.blackjack.game.get_bets()[player]
         return self.winnings
