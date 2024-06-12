@@ -18,8 +18,8 @@ class Valid:
 
 class Bet:
     def __init__(self) -> None:
-        valid = Valid()
-        self.__bet = valid.get_valid_number('Make your bets from 5 to 100 dollars! ', 5, 100)
+        self.valid = Valid()
+        self.__bet = self.valid.get_valid_number('Make your bets from 5 to 100 dollars! ', 5, 100)
         
     def make_bet(self) -> int:
         return self.__bet

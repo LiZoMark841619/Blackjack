@@ -38,6 +38,7 @@ class Blackjack(Valid):
     
     def get_dealt_card_value(self, card) -> int:
         return self._cards._values[card]
+    
 class Game:
     def __init__(self) -> None:
         self.game = Blackjack()
