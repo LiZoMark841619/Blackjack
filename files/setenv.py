@@ -1,13 +1,14 @@
 import os
 
-print('setenv....', end=' ')
+print('setenv...', end=' ')
+print(os.environ['USERNAME'])
 
-os.environ['USER'] = 'Balazs'
+os.environ['USERNAME'] = 'Balazs'
 os.system('python echoenv.py')
 
-os.environ['USER'] = 'Mark'
+os.environ['USERNAME'] = 'Mark'
 os.system('python echoenv.py')
 
-os.environ['USER'] = input('?')
+os.environ['USERNAME'] = input('? ')
 print(os.popen('python echoenv.py').read())
 

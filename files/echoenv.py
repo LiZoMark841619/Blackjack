@@ -1,4 +1,5 @@
 import os
 
-print('Hello', os.environ['USER'])
+print('echoenv...', end=' ')
+print('Hello', os.environ['USERNAME'])
 
