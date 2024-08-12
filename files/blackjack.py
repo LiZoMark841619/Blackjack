@@ -16,7 +16,7 @@ class Blackjack(Valid):
     
     def set_players(self) -> None:
         self.num_players = self.get_valid_number('Enter the number of players from 1 to 4! ', 1, 4)
-        self.__players = [player.get_name for player in [Player() for _ in range(self.num_players)]]
+        self.__players = [f'Player: {player.get_name}' for player in [Player() for _ in range(self.num_players)]]
         
     def get_players(self) -> list:
         return self.__players
@@ -39,13 +39,16 @@ class Blackjack(Valid):
     def get_dealt_card_value(self, card) -> int:
         return self._cards._values[card]
     
+    def settings(self) -> None:
+        self.set_dealer()
+        self.set_players()
+        self.set_bets()
+        self.welcome()
+        
 class Game:
     def __init__(self) -> None:
         self.game = Blackjack()
-        self.game.set_dealer()
-        self.game.set_players()
-        self.game.set_bets()
-        self.game.welcome()
+        self.game.settings()
         self.dealer = self.game.get_dealer()
         self.players_cards: dict[str, list] = {}
         self.dealers_card: dict[Any, Any] = {}
