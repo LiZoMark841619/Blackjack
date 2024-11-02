@@ -73,9 +73,8 @@ class Game:
             self.update_card(player, card, self.players_cards)
             if self.players_cards[player][-1] > 21:
                 print(f'{player}, you lost! ')
-                break
+                return
             print(self.players_cards)
-            continue
             
     def hit_dealer(self) -> None:
         while self.dealers_card[self.dealer][-1] < 16:
