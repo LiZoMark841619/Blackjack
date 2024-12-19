@@ -53,14 +53,12 @@ class Game:
         self.players_cards: dict[str, list] = {}
         self.dealers_card: dict[Any, Any] = {}
     
-    def deal_first_card(self, player_or_dealer: str, dealt_cards: dict) -> None:
+    def deal_cards(self, player_or_dealer: str, dealt_cards: dict) -> None:
         card = self.game.deal_card()
         card_value = self.game.get_dealt_card_value(card)
         dealt_cards[player_or_dealer] = [card, card_value]
-
-    def deal_second_card(self, player_or_dealer: str, dealt_cards: dict) -> None:
-        card = self.game.deal_card()
-        self.update_card(player_or_dealer, card, dealt_cards)
+        if len(dealt_cards) > 1:
+            self.update_card(player_or_dealer, card, dealt_cards)
     
     def update_card(self, player: str, card: tuple, dealt_cards: dict) -> None:
         dealt_cards[player][0] += card

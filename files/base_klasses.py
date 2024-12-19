@@ -1,9 +1,11 @@
+from itertools import product
+
 class Valid:
     def get_valid_number(self, prompt: str, min_val: int, max_val:int) -> int:
         while True:
             try:
                 value = int(input(prompt))
-                if min_val <= value <= max_val:
+                if value in range(min_val, max_val+1):
                     return value
                 print('Invalid number! Please try again! ')
             except ValueError:
@@ -46,5 +48,5 @@ class Player:
 class FrenchDeck:
     def __init__(self) -> None:
         self._cards = list(range(2, 11)) + list('JQKA')
-        self._deck = [(card, color) for card in self._cards for color in 'SHDC']
+        self._deck = list(product(self._cards, 'SHDC'))
         self._values = {card:card[0] if isinstance(card[0], int) else 1 if card[0] == 'A' else 10 for card in self._deck}
