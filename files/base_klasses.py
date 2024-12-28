@@ -22,8 +22,9 @@ class Bet:
     def __init__(self) -> None:
         self.valid = Valid()
         self.__bet = self.valid.get_valid_number('Make your bets from 5 to 100 dollars! ', 5, 100)
-        
-    def make_bet(self) -> int:
+    
+    @property
+    def get_bet(self) -> int:
         return self.__bet
 
 class Dealer:
