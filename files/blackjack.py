@@ -16,9 +16,9 @@ class Blackjack(Valid):
     
     def set_players(self) -> None:
         self.num_players = self.get_valid_number('Enter the number of players from 1 to 4! ', 1, 4)
-        self.__players = [f'Player: {player.get_name}' for player in [Player() for _ in range(self.num_players)]]
+        self.__players = [player.get_name for player in [Player() for _ in range(self.num_players)]]
         
-    def get_players(self) -> list:
+    def get_players(self) -> list[str]:
         return self.__players
     
     def set_bets(self) -> None:
@@ -32,11 +32,11 @@ class Blackjack(Valid):
         print(f'\nWelcome to game {self.__class__.__name__} {self.get_players()}! ')
 
     def deal_card(self) -> tuple:
-        card = random.choice(self._cards._deck)
+        card = random.choice(list(self._cards._deck))
         self._cards._deck.remove(card)
         return card
     
-    def get_dealt_card_value(self, card) -> int:
+    def get_dealt_card_value(self, card: tuple[Any, str]) -> int:
         return self._cards._values[card]
     
     def settings(self) -> None:
@@ -70,7 +70,7 @@ class Game:
             card = self.game.deal_card()
             self.update_card(player, card, self.players_cards)
             if self.players_cards[player][-1] > 21:
-                print(f'{player}, you lost! ')
+                print(f'{player} lost! ')
                 return
             print(self.players_cards)
             
@@ -78,6 +78,7 @@ class Game:
         while self.dealers_card[self.dealer][-1] < 16:
             card = self.game.deal_card()
             if self.dealers_card[self.dealer][-1] > 21:
+                print(f'{self.dealer} lost! ')
                 return
             self.update_card(self.dealer, card, self.dealers_card)
     
@@ -88,11 +89,6 @@ class Game:
     def view_dealer_hand(self) -> None:
         for dealer, card_and_value in self.dealers_card.items():
             print(dealer,'->',card_and_value)
-            
-    def splitting(self):
-        pass
-    def doubling(self):
-        pass
     
     def get_insurance(self, player: str, insurance: int) -> None:
         self.game.get_bets()[player] += insurance

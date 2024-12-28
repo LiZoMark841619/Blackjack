@@ -20,16 +20,16 @@ class Process:
 
     def surrender(self, player_names: list) -> None:
         for player in player_names:
-            surrender = self.blackjack.game.get_valid_string(f'\nWould you like to surrender your cards {player}? Yes, or no? ', 'yes', 'no')
-            if surrender == 'yes': self.blackjack.surrender_cards(player)
-            else: self.blackjack.hit_player(player)
+            if self.blackjack.game.get_valid_string(f'\nWould you like to surrender your cards {player}? Yes, or no? ', 'yes', 'no') == 'yes':
+                self.blackjack.surrender_cards(player)
+            self.blackjack.hit_player(player)
         self.blackjack.hit_dealer()
 
     def insurance_against_blackjack(self, player_names: list) -> None:
         for player in player_names:
             if self.blackjack.dealers_card[self.blackjack.dealer][0][0] == 'A':
-                insurance = self.blackjack.game.get_valid_string(f'Would you like to get insurance {player}? Yes or no? ', 'yes', 'no')
-                if insurance == 'yes': self.blackjack.get_insurance(player, self.bets[player]//2)
+                if self.blackjack.game.get_valid_string(f'Would you like to get insurance {player}? Yes or no? ', 'yes', 'no') == 'yes':
+                    self.blackjack.get_insurance(player, self.bets[player]//2)
                     
     def check_winnings(self) -> dict:
         winnings = {}

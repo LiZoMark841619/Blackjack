@@ -1,5 +1,5 @@
 from process import Process
-import shelve
+# import shelve
 
 if __name__ == '__main__':
     process = Process()
@@ -15,10 +15,10 @@ if __name__ == '__main__':
     process.surrender(players)
     process.view_hands()
     print(f'Here are your winnings:\n{process.check_winnings()}')
-    db = shelve.open('winning_results')
-    for name in process.check_winnings():
-        db[name] = process.check_winnings()[name]
-    db.close()
-    db = shelve.open('winning_results')
-    for key in db:
-        print(key, '->', db[key])
+    # db = shelve.open('winning_results')
+    # for name in process.check_winnings():
+    #     db[name] = process.check_winnings()[name]
+    # db.close()
+    # db = shelve.open('winning_results')
+    # for key in db:
+    #     print(key, '->', db[key])

@@ -47,6 +47,6 @@ class Player:
     
 class FrenchDeck:
     def __init__(self) -> None:
-        self._cards = list(range(2, 11)) + list('JQKA')
-        self._deck = list(product(self._cards, 'SHDC'))
+        self._cards = set(list(range(2, 11)) + list('JQKA'))
+        self._deck = set(list(product(self._cards, 'SHDC')))
         self._values = {card:card[0] if isinstance(card[0], int) else 1 if card[0] == 'A' else 10 for card in self._deck}
