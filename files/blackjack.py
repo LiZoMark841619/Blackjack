@@ -1,31 +1,28 @@
 from base_klasses import Valid, Bet, Player, Dealer, FrenchDeck
-from typing import Any
 import random
 
 class Blackjack(Valid):
     def __init__(self) -> None:
         self._cards = FrenchDeck()
         self._dealers = Dealer()
+        self.num_players = self.get_valid_number('Enter the number of players from 1 to 4! ', 1, 4)
         self.players_cards: dict[str, list] = {}
-        self.dealers_card: dict[Any, Any] = {}
+        self.dealers_card: dict[str, tuple] = {}
 
     def set_dealer(self) -> None:
-        dealer = self.get_valid_number(f'Choose your dealer from {self._dealers.get_options}! ', 0, list(self._dealers.get_options.keys())[-1])
-        self.__dealer = self._dealers.get_options[dealer]
+        self.__dealer = self._dealers.get_options[self.get_valid_number(f'Choose your dealer from {self._dealers.get_options}! ', 0, 3)]
 
     def get_dealer(self) -> str:
         return f'Dealer: {self.__dealer}'
     
     def set_players(self) -> None:
-        self.num_players = self.get_valid_number('Enter the number of players from 1 to 4! ', 1, 4)
         self.__players = [player.get_name for player in [Player() for _ in range(self.num_players)]]
         
     def get_players(self) -> list:
         return self.__players
     
     def set_bets(self) -> None:
-        self.__bets = [bet.get_bet for bet in [Bet() for _ in range(self.num_players)]]
-        self.__players_bets = dict(zip(self.__players, self.__bets))
+        self.__players_bets = dict(zip(self.__players, [bet.get_bet for bet in [Bet() for _ in range(self.num_players)]]))
     
     def get_bets(self) -> dict:
         return self.__players_bets
@@ -47,12 +44,12 @@ class Blackjack(Valid):
         self.set_bets()
         self.welcome()
     
-    def deal_cards(self, player_or_dealer: str, dealt_cards: dict) -> None:
+    def deal_first_card(self, player_or_dealer: str, dealt_cards: dict) -> None:
         card = self.deal_card()
         card_value = self.get_dealt_card_value(card)
         dealt_cards[player_or_dealer] = [card, card_value]
     
-    def update_card(self, player: str, dealt_cards: dict) -> None:
+    def deal_second_card(self, player: str, dealt_cards: dict) -> None:
         card = self.deal_card()
         card_value = self.get_dealt_card_value(card)
         dealt_cards[player][0] += card
@@ -61,8 +58,7 @@ class Blackjack(Valid):
         
     def hit_player(self, player: str) -> None:
         while self.get_valid_string(f'\nDo you want to hit {player}? Enter yes, or no! ', 'yes', 'no') == 'yes':
-            self.deal_card()
-            self.update_card(player, self.players_cards)
+            self.deal_second_card(player, self.players_cards)
             if self.players_cards[player][-1] > 21:
                 print(f'{player}, you lost! ')
                 return
@@ -71,10 +67,9 @@ class Blackjack(Valid):
     def hit_dealer(self) -> None:
         dealer = self.get_dealer()
         while self.dealers_card[dealer][-1] < 16:
-            self.deal_card()
             if self.dealers_card[dealer][-1] > 21:
                 return
-            self.update_card(dealer, self.dealers_card)
+            self.deal_second_card(dealer, self.dealers_card)
     
     def view_player_hand(self) -> None:
         for player in self.players_cards: print(player,'->',self.players_cards[player])
